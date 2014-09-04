@@ -3,6 +3,8 @@
 // license that can be found in the LICENSE file.
 
 // Package round provides a few rounding utility functions.
+//
+// The behavior for halfway values is to round up.
 package round
 
 import "time"
@@ -23,15 +25,13 @@ func init() {
 }
 
 // Duration returns the result of rounding d to the nearest multiple of n.
-// The rounding behavior for halfway values is to round up. If n <= 0,
-// Round returns d unchanged.
+// If n <= 1, it returns d unchanged.
 func Duration(d, n time.Duration) time.Duration {
 	return time.Duration(Int64(int64(d), int64(n)))
 }
 
 // DurationN returns the result of rounding d to n significant decimal figures
-// for standard string formatting. The rounding behavior for halfway values
-// is to round up. If n <= 0, DurationN returns d unchanged.
+// for standard string formatting. If n <= 0, it returns d unchanged.
 //
 // Examples (representing time.Duration values as strings):
 //	DurationN("1h35m42.567s", 1) == "2h0m0s"
@@ -71,11 +71,39 @@ func DurationN(d time.Duration, n int) time.Duration {
 	return time.Duration(Int64N(v, n))
 }
 
+// Int returns the result of rounding v to the nearest multiple of n.
+// If n <= 1, it returns v unchanged.
+func Int(v, n int) int {
+	return int(Int64(int64(v), int64(n)))
+}
+
+// IntN returns the result of rounding v to n significant decimal figures.
+// If n <= 0, it returns v unchanged.
+func IntN(v int, n int) int {
+	return int(Int64N(int64(v), n))
+}
+
+// Int32 returns the result of rounding v to the nearest multiple of n.
+// If n <= 1, it returns v unchanged.
+func Int32(v, n int32) int32 {
+	return int32(Int64(int64(v), int64(n)))
+}
+
+// Int32N returns the result of rounding v to n significant decimal figures.
+// If n <= 0, it returns v unchanged.
+func Int32N(v int32, n int) int32 {
+	return int32(Int64N(int64(v), n))
+}
+
 // Int64 returns the result of rounding v to the nearest multiple of n.
-// The rounding behavior for halfway values is to round up. If n <= 0,
-// Int64 returns v unchanged.
+// If n <= 1, it returns v unchanged.
+//
+// Examples:
+//	Int64(7, 2) == 8
+//	Int64(123, 10) == 120
+//	Int64(-420, 25) == -425
 func Int64(v, n int64) int64 {
-	if n <= 0 {
+	if n <= 1 {
 		return v
 	}
 	neg := v < 0
@@ -94,8 +122,12 @@ func Int64(v, n int64) int64 {
 }
 
 // Int64N returns the result of rounding v to n significant decimal figures.
-// The rounding behavior for halfway values is to round up. If n <= 0,
-// Int64N returns v unchanged.
+// If n <= 0, it returns v unchanged.
+//
+// Examples:
+//	Int64N(12895, 2) == 13000
+//	Int64N(4213, 1) == 4000
+//	Int64N(-567, 2) == -570
 func Int64N(v int64, n int) int64 {
 	if n <= 0 {
 		return v
@@ -106,11 +138,39 @@ func Int64N(v int64, n int) int64 {
 	return v
 }
 
+// Uint returns the result of rounding v to the nearest multiple of n.
+// If n <= 1, it returns v unchanged.
+func Uint(v, n uint) uint {
+	return uint(Uint64(uint64(v), uint64(n)))
+}
+
+// UintN returns the result of rounding v to n significant decimal figures.
+// If n <= 0, it returns v unchanged.
+func UintN(v uint, n int) uint {
+	return uint(Uint64N(uint64(v), n))
+}
+
+// Uint32 returns the result of rounding v to the nearest multiple of n.
+// If n <= 1, it returns v unchanged.
+func Uint32(v, n uint32) uint32 {
+	return uint32(Uint64(uint64(v), uint64(n)))
+}
+
+// Uint32N returns the result of rounding v to n significant decimal figures.
+// If n <= 0, it returns v unchanged.
+func Uint32N(v uint32, n int) uint32 {
+	return uint32(Uint64N(uint64(v), n))
+}
+
 // Uint64 returns the result of rounding v to the nearest multiple of n.
-// The rounding behavior for halfway values is to round up. If n == 0,
-// Uint64 returns v unchanged.
+// If n <= 1, it returns v unchanged.
+//
+// Examples:
+//	Int64(7, 2) == 8
+//	Int64(123, 10) == 120
+//	Int64(420, 25) == 425
 func Uint64(v, n uint64) uint64 {
-	if n == 0 {
+	if n <= 1 {
 		return v
 	}
 	r := v % n
@@ -121,10 +181,13 @@ func Uint64(v, n uint64) uint64 {
 }
 
 // Uint64N returns the result of rounding v to n significant decimal figures.
-// The rounding behavior for halfway values is to round up. If n == 0,
-// Uint64N returns v unchanged.
+// If n <= 0, it returns v unchanged.
+//
+// Examples:
+//	Uint64N(12895, 2) == 13000
+//	Uint64N(4213, 1) == 4000
 func Uint64N(v uint64, n int) uint64 {
-	if n == 0 {
+	if n <= 0 {
 		return v
 	}
 	if e := u64digits(v) - n; e > 0 {
@@ -133,7 +196,8 @@ func Uint64N(v uint64, n int) uint64 {
 	return v
 }
 
-// return range: [1,19]
+// i64digits returns the number of decimal digits needed
+// to represent v in the range [1, 19].
 func i64digits(v int64) int {
 	if v < 0 {
 		v = -v
@@ -147,7 +211,8 @@ func i64digits(v int64) int {
 	return d
 }
 
-// return range: [1,20]
+// u64digits returns the number of decimal digits needed
+// to represent v in the range [1, 20].
 func u64digits(v uint64) int {
 	d := 1
 	for v > 9 {
@@ -157,7 +222,7 @@ func u64digits(v uint64) int {
 	return d
 }
 
-// e range: [-19,19]
+// e in the range [-19, 19]
 func i64pow10(b int64, e int) int64 {
 	if e < 0 {
 		return b / int64(pow10tab[-e])
@@ -165,7 +230,7 @@ func i64pow10(b int64, e int) int64 {
 	return b * int64(pow10tab[e])
 }
 
-// e range: [-20,20]
+// e in the range [-20, 20]
 func u64pow10(b uint64, e int) uint64 {
 	if e < 0 {
 		return b / pow10tab[-e]
