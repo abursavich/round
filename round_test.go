@@ -59,3 +59,20 @@ func TestInt64N(t *testing.T) {
 		}
 	}
 }
+
+func TestUint64N(t *testing.T) {
+	tests := []struct {
+		val uint64
+		out []uint64
+	}{
+		{123, []uint64{123, 100, 120, 123, 123, 123, 123, 123, 123, 123}},
+		{123456, []uint64{123456, 100000, 120000, 123000, 123500, 123460, 123456, 123456, 123456, 123456}},
+	}
+	for _, tt := range tests {
+		for n, exp := range tt.out {
+			if out := Uint64N(tt.val, n); out != exp {
+				t.Errorf("Int64N(%d, %d); expected: %d (%s); got: %d (%s)\n", tt.val, n, exp, exp, out, out)
+			}
+		}
+	}
+}
