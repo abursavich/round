@@ -71,30 +71,6 @@ func DurationN(d time.Duration, n int) time.Duration {
 	return time.Duration(Int64N(v, n))
 }
 
-// Int returns the result of rounding v to the nearest multiple of n.
-// If n <= 1, it returns v unchanged.
-func Int(v, n int) int {
-	return int(Int64(int64(v), int64(n)))
-}
-
-// IntN returns the result of rounding v to n significant decimal figures.
-// If n <= 0, it returns v unchanged.
-func IntN(v int, n int) int {
-	return int(Int64N(int64(v), n))
-}
-
-// Int32 returns the result of rounding v to the nearest multiple of n.
-// If n <= 1, it returns v unchanged.
-func Int32(v, n int32) int32 {
-	return int32(Int64(int64(v), int64(n)))
-}
-
-// Int32N returns the result of rounding v to n significant decimal figures.
-// If n <= 0, it returns v unchanged.
-func Int32N(v int32, n int) int32 {
-	return int32(Int64N(int64(v), n))
-}
-
 // Int64 returns the result of rounding v to the nearest multiple of n.
 // If n <= 1, it returns v unchanged.
 //
@@ -136,30 +112,6 @@ func Int64N(v int64, n int) int64 {
 		return Int64(v, i64pow10(1, e))
 	}
 	return v
-}
-
-// Uint returns the result of rounding v to the nearest multiple of n.
-// If n <= 1, it returns v unchanged.
-func Uint(v, n uint) uint {
-	return uint(Uint64(uint64(v), uint64(n)))
-}
-
-// UintN returns the result of rounding v to n significant decimal figures.
-// If n <= 0, it returns v unchanged.
-func UintN(v uint, n int) uint {
-	return uint(Uint64N(uint64(v), n))
-}
-
-// Uint32 returns the result of rounding v to the nearest multiple of n.
-// If n <= 1, it returns v unchanged.
-func Uint32(v, n uint32) uint32 {
-	return uint32(Uint64(uint64(v), uint64(n)))
-}
-
-// Uint32N returns the result of rounding v to n significant decimal figures.
-// If n <= 0, it returns v unchanged.
-func Uint32N(v uint32, n int) uint32 {
-	return uint32(Uint64N(uint64(v), n))
 }
 
 // Uint64 returns the result of rounding v to the nearest multiple of n.
