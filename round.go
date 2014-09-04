@@ -4,7 +4,10 @@
 
 // Package round provides a few rounding utility functions.
 //
-// The behavior for halfway values is to round up.
+// The behavior for halfway values is to round up for positive values
+// and down for negative values. Examples:
+//	Int64(15, 10)  // 20
+//	Int64(-15, 10) // -20
 package round
 
 import "time"
