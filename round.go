@@ -26,6 +26,13 @@ func init() {
 
 // Duration returns the result of rounding d to the nearest multiple of n.
 // If n <= 1, it returns d unchanged.
+//
+// Examples:
+//	// time.Duration values represnted as strings for ease of understanding
+//	Duration("3h25m45.6s", "0.5s") // "3h25m45.5s"
+//	Duration("34.56s", "10s")      // "30s"
+//	Duration("34.56789s", "1ms")   // "34.568s"
+//	Duration("-1m30s", "1m0s")     // "-2m0s"
 func Duration(d, n time.Duration) time.Duration {
 	return time.Duration(Int64(int64(d), int64(n)))
 }
@@ -33,14 +40,15 @@ func Duration(d, n time.Duration) time.Duration {
 // DurationN returns the result of rounding d to n significant decimal figures
 // for standard string formatting. If n <= 0, it returns d unchanged.
 //
-// Examples (representing time.Duration values as strings):
-//	DurationN("1h35m42.567s", 1) == "2h0m0s"
-//	DurationN("1h35m42.567s", 2) == "1h40m0s"
-//	DurationN("1h35m42.567s", 3) == "1h36m0s"
-//	DurationN("1h35m42.567s", 4) == "1h35m40s"
-//	DurationN("3.789s", 1) == "4s"
-//	DurationN("1.567ms", 3) == "1.57ms"
-//	DurationN("-41.5ms", 2) == "-42ms"
+// Examples:
+//	// time.Duration values represnted as strings for ease of understanding
+//	DurationN("1h35m42.567s", 1) // "2h0m0s"
+//	DurationN("1h35m42.567s", 2) // "1h40m0s"
+//	DurationN("1h35m42.567s", 3) // "1h36m0s"
+//	DurationN("1h35m42.567s", 4) // "1h35m40s"
+//	DurationN("3.789s", 1)       // "4s"
+//	DurationN("1.567ms", 3)      // "1.57ms"
+//	DurationN("-41.5ms", 2)      // "-42ms"
 func DurationN(d time.Duration, n int) time.Duration {
 	if n <= 0 {
 		return d
@@ -75,9 +83,9 @@ func DurationN(d time.Duration, n int) time.Duration {
 // If n <= 1, it returns v unchanged.
 //
 // Examples:
-//	Int64(7, 2) == 8
-//	Int64(123, 10) == 120
-//	Int64(-420, 25) == -425
+//	Int64(7, 2)     // 8
+//	Int64(123, 10)  // 120
+//	Int64(-420, 25) // -425
 func Int64(v, n int64) int64 {
 	if n <= 1 {
 		return v
@@ -101,9 +109,9 @@ func Int64(v, n int64) int64 {
 // If n <= 0, it returns v unchanged.
 //
 // Examples:
-//	Int64N(12895, 2) == 13000
-//	Int64N(4213, 1) == 4000
-//	Int64N(-567, 2) == -570
+//	Int64N(12895, 2) // 13000
+//	Int64N(4213, 1)  // 4000
+//	Int64N(-567, 2)  // -570
 func Int64N(v int64, n int) int64 {
 	if n <= 0 {
 		return v
@@ -118,9 +126,9 @@ func Int64N(v int64, n int) int64 {
 // If n <= 1, it returns v unchanged.
 //
 // Examples:
-//	Int64(7, 2) == 8
-//	Int64(123, 10) == 120
-//	Int64(420, 25) == 425
+//	Int64(7, 2)    // 8
+//	Int64(123, 10) // 120
+//	Int64(420, 25) // 425
 func Uint64(v, n uint64) uint64 {
 	if n <= 1 {
 		return v
@@ -136,8 +144,8 @@ func Uint64(v, n uint64) uint64 {
 // If n <= 0, it returns v unchanged.
 //
 // Examples:
-//	Uint64N(12895, 2) == 13000
-//	Uint64N(4213, 1) == 4000
+//	Uint64N(12895, 2) // 13000
+//	Uint64N(4213, 1)  // 4000
 func Uint64N(v uint64, n int) uint64 {
 	if n <= 0 {
 		return v
